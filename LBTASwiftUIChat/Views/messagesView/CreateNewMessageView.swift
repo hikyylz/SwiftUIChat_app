@@ -32,8 +32,8 @@ struct CreateNewMessageView: View {
                     }
                     .padding(.horizontal, 10)
                     .onTapGesture {
-                        //dissmis()
-                        print("a: \(user.email)")
+                        
+                        dissmis()
                     }
                     
                     Divider()
