@@ -12,28 +12,34 @@ struct MessagesView: View {
     var body: some View {
         ScrollView {
             ForEach(0..<20) { _ in
-                HStack(spacing: 16){
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 20))
-                        .padding(10)
-                        .overlay {
-                            Circle()
-                                .stroke()
-                                .foregroundColor(.black.opacity(0.5))
+                NavigationLink {
+                    ChatView()
+                } label: {
+                    HStack(spacing: 16){
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 20))
+                            .padding(10)
+                            .overlay {
+                                Circle()
+                                    .stroke()
+                                    .foregroundColor(.black.opacity(0.5))
+                            }
+                        
+                        
+                        VStack(alignment: .leading){
+                            Text("user name")
+                            Text("user message")
+                                .font(.system(size: 14))
+                                .foregroundStyle(Color.gray)
                         }
-                    
-                    
-                    VStack(alignment: .leading){
-                        Text("user name")
-                        Text("user message")
-                            .font(.system(size: 14))
-                            .foregroundStyle(Color.gray)
+                        Spacer()
+                        Text("22d")
+                            .font(.system(.caption))
                     }
-                    Spacer()
-                    Text("22d")
-                        .font(.system(.caption))
+                    .padding(.vertical, 10)
                 }
-                .padding(.vertical, 10)
+                .foregroundStyle(Color.black)
+                
                 Divider()
             }
         }
@@ -42,5 +48,6 @@ struct MessagesView: View {
 }
 
 #Preview {
-    MessagesView()
+//    MessagesView()
+    NewMessagesView()
 }

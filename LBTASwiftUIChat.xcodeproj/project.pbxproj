@@ -51,6 +51,7 @@
 		ECECB3642B76675000642556 /* CreateNewMessageVievModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECECB3632B76675000642556 /* CreateNewMessageVievModel.swift */; };
 		ECECB3672B76681900642556 /* ChatUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECECB3662B76681900642556 /* ChatUserInfo.swift */; };
 		ECECB3692B7695D900642556 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECECB3682B7695D900642556 /* ProfileView.swift */; };
+		ECF6AE6F2B7A4C90000EB7EB /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF6AE6E2B7A4C90000EB7EB /* ChatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		ECECB3632B76675000642556 /* CreateNewMessageVievModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewMessageVievModel.swift; sourceTree = "<group>"; };
 		ECECB3662B76681900642556 /* ChatUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUserInfo.swift; sourceTree = "<group>"; };
 		ECECB3682B7695D900642556 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		ECF6AE6E2B7A4C90000EB7EB /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				EC6EDC3C2B73CB6C00E82F5D /* NewMessagesView.swift */,
+				ECF6AE6E2B7A4C90000EB7EB /* ChatView.swift */,
 				ECBCB2972B7515320006012D /* CustomNavBar.swift */,
 				ECBCB2992B7518DA0006012D /* MessagesView.swift */,
 				ECBCB29B2B7519450006012D /* newMessageButtonView.swift */,
@@ -308,6 +311,7 @@
 				ECECB3692B7695D900642556 /* ProfileView.swift in Sources */,
 				ECECB3642B76675000642556 /* CreateNewMessageVievModel.swift in Sources */,
 				ECBCB29C2B7519450006012D /* newMessageButtonView.swift in Sources */,
+				ECF6AE6F2B7A4C90000EB7EB /* ChatView.swift in Sources */,
 				ECBCB29A2B7518DA0006012D /* MessagesView.swift in Sources */,
 				EC6EDC032B7395C200E82F5D /* FirebaseManager.swift in Sources */,
 				EC6EDC012B738EDA00E82F5D /* ImagePicker.swift in Sources */,

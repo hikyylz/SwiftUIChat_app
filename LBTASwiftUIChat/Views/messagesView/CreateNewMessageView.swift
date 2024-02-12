@@ -11,6 +11,9 @@ import SDWebImageSwiftUI
 struct CreateNewMessageView: View {
     @Environment(\.dismiss) var dissmis
     @ObservedObject var createNewMessageVM = CreateNewMessageVievModel()
+    //View içerisinde yarattığım bir değişkeni bu view un oluşturulduğu yere geri vermek için Callback özelliğini kullanıyorum alttaki değişknde.
+    let didSelectNewUser: (ChatUserInfo) -> ()
+    //
     
     var body: some View {
         NavigationStack{
@@ -32,10 +35,9 @@ struct CreateNewMessageView: View {
                     }
                     .padding(.horizontal, 10)
                     .onTapGesture {
-                        
+                        didSelectNewUser(user)
                         dissmis()
                     }
-                    
                     Divider()
                 }
             }
@@ -53,6 +55,6 @@ struct CreateNewMessageView: View {
     }
 }
 
-#Preview {
-    CreateNewMessageView()
-}
+//#Preview {
+//    CreateNewMessageView()
+//}
