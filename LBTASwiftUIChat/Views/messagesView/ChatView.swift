@@ -9,7 +9,12 @@ import SwiftUI
 
 struct ChatView: View {
     @State var ChatUser: ChatUserInfo?
-    @State var chatText: String = ""
+    @ObservedObject var ChatLogVM: ChatLogViewModel
+    
+    init(ChatUser: ChatUserInfo?) {
+        self.ChatUser = ChatUser
+        self.ChatLogVM = ChatLogViewModel(ChatingPerson: ChatUser)
+    }
     
     var body: some View {
         NavigationStack{
@@ -52,9 +57,9 @@ struct ChatView: View {
                 .onTapGesture {
                     
                 }
-            TextField("Description", text: $chatText)
+            TextField("Description", text: $ChatLogVM.chatText)
             Button("Send") {
-                
+                self.ChatLogVM.handleSend()
             }
         }
         .padding(.top, 20)

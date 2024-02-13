@@ -52,6 +52,7 @@
 		ECECB3672B76681900642556 /* ChatUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECECB3662B76681900642556 /* ChatUserInfo.swift */; };
 		ECECB3692B7695D900642556 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECECB3682B7695D900642556 /* ProfileView.swift */; };
 		ECF6AE6F2B7A4C90000EB7EB /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF6AE6E2B7A4C90000EB7EB /* ChatView.swift */; };
+		ECF6AE712B7A8346000EB7EB /* ChatLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF6AE702B7A8346000EB7EB /* ChatLogViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		ECECB3662B76681900642556 /* ChatUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUserInfo.swift; sourceTree = "<group>"; };
 		ECECB3682B7695D900642556 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		ECF6AE6E2B7A4C90000EB7EB /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		ECF6AE702B7A8346000EB7EB /* ChatLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +182,7 @@
 			children = (
 				EC6EDC3E2B74FFBC00E82F5D /* MainMessagesViewModel.swift */,
 				ECECB3632B76675000642556 /* CreateNewMessageVievModel.swift */,
+				ECF6AE702B7A8346000EB7EB /* ChatLogViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				EC6EDC3D2B73CB6C00E82F5D /* NewMessagesView.swift in Sources */,
 				EC599B1F2B72A2F8007E5E96 /* LoginView.swift in Sources */,
 				EC599B1D2B72A2F8007E5E96 /* LBTASwiftUIChatApp.swift in Sources */,
+				ECF6AE712B7A8346000EB7EB /* ChatLogViewModel.swift in Sources */,
 				EC6EDC3F2B74FFBC00E82F5D /* MainMessagesViewModel.swift in Sources */,
 				ECBCB2982B7515320006012D /* CustomNavBar.swift in Sources */,
 				ECECB3622B765F6800642556 /* CreateNewMessageView.swift in Sources */,
