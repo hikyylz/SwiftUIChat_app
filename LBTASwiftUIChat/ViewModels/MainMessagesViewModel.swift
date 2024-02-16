@@ -19,25 +19,20 @@ class MainMessagesViewModel: ObservableObject {
     
     private func fetchCurrentUser(){
         guard let userId = FirebaseManager.shared.auth.currentUser?.uid else {
-//            self.errMessage = "auth did not work"
             return
         }
-//        self.errMessage = "\(userId)"
         
         FirebaseManager.shared.firestore.collection("users").document(userId).getDocument { docSnap, err in
             if let _ = err{
-//                self.errMessage = "failed to fetch user \(err.localizedDescription)"
                 return
             }
             guard let data = docSnap?.data() else{
-//                self.errMessage = "no docSnap"
                 return
             }
-//            self.errMessage = data.debugDescription
             
-            let uid = data["uid"] as? String ?? ""
-            let email = data["email"] as? String ?? ""
-            let profileUrl = data["profileUrl"] as? String ?? ""
+            let uid = data[FirebaseConstants.uid] as? String ?? ""
+            let email = data[FirebaseConstants.email] as? String ?? ""
+            let profileUrl = data[FirebaseConstants.profileUrl] as? String ?? ""
             self.chatUser = ChatUserInfo(uid: uid, email: email, profileUrl: profileUrl)
         }
     }

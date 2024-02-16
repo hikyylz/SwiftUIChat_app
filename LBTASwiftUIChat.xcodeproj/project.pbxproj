@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EC476CCD2B7FE03A00D282EE /* RecentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC476CCC2B7FE03A00D282EE /* RecentMessage.swift */; };
 		EC599B1D2B72A2F8007E5E96 /* LBTASwiftUIChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC599B1C2B72A2F8007E5E96 /* LBTASwiftUIChatApp.swift */; };
 		EC599B1F2B72A2F8007E5E96 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC599B1E2B72A2F8007E5E96 /* LoginView.swift */; };
 		EC599B212B72A2F9007E5E96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC599B202B72A2F9007E5E96 /* Assets.xcassets */; };
@@ -57,6 +58,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EC476CCC2B7FE03A00D282EE /* RecentMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMessage.swift; sourceTree = "<group>"; };
 		EC599B192B72A2F8007E5E96 /* LBTASwiftUIChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LBTASwiftUIChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC599B1C2B72A2F8007E5E96 /* LBTASwiftUIChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBTASwiftUIChatApp.swift; sourceTree = "<group>"; };
 		EC599B1E2B72A2F8007E5E96 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 			children = (
 				ECECB3662B76681900642556 /* ChatUserInfo.swift */,
 				ECB0427A2B7B828300B6E368 /* ChatMessage.swift */,
+				EC476CCC2B7FE03A00D282EE /* RecentMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 				ECF6AE6F2B7A4C90000EB7EB /* ChatView.swift in Sources */,
 				ECBCB29A2B7518DA0006012D /* MessagesView.swift in Sources */,
 				EC6EDC032B7395C200E82F5D /* FirebaseManager.swift in Sources */,
+				EC476CCD2B7FE03A00D282EE /* RecentMessage.swift in Sources */,
 				EC6EDC012B738EDA00E82F5D /* ImagePicker.swift in Sources */,
 				EC6EDC3D2B73CB6C00E82F5D /* NewMessagesView.swift in Sources */,
 				EC599B1F2B72A2F8007E5E96 /* LoginView.swift in Sources */,

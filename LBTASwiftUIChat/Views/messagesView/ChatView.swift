@@ -101,7 +101,6 @@ struct ChatView: View {
             TextField("Description", text: $ChatLogVM.chatText)
             Button("Send") {
                 self.ChatLogVM.handleSend()
-                self.ChatLogVM.chatText = ""
             }
         }
         .padding(.top, 20)

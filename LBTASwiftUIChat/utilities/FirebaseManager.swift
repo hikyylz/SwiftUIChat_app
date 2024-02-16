@@ -28,3 +28,13 @@ class FirebaseManager: NSObject {
     }
     
 }
+
+struct FirebaseConstants{
+    static let fromID = "fromID"
+    static let toID = "toID"
+    static let text = "text"
+    static let timestamp = "timestamp"
+    static let uid = "uid"
+    static let email = "email"
+    static let profileUrl = "profileUrl"
+}

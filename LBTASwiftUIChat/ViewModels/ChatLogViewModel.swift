@@ -28,7 +28,7 @@ class ChatLogViewModel: ObservableObject {
             .collection("messages")
             .document(fromID)
             .collection(toID)
-            .order(by: "timestamp")
+            .order(by: FirebaseConstants.timestamp)
             .addSnapshotListener { querySnap, err in
                 if let err = err {
                     self.ErrMessage = err.localizedDescription
@@ -66,16 +66,17 @@ class ChatLogViewModel: ObservableObject {
             .document()
         
         let docData = [
-            "fromID" : fromID,
-            "toID" : toID,
-            "text" : chatText,
-            "timestamp" : Date() // !
+            FirebaseConstants.fromID : fromID,
+            FirebaseConstants.toID : toID,
+            FirebaseConstants.text : chatText,
+            FirebaseConstants.timestamp : Date()
         ] as [String: Any]
         
         document.setData(docData) { err in
             if let err = err{
                 self.ErrMessage = err.localizedDescription
             }
+            self.persistRecentMessages()
             self.messageSend.toggle() // scroll viewreader için proxy değişkeni bu değişken. scroll down yapmama yarıyor.
         }
         
@@ -87,10 +88,10 @@ class ChatLogViewModel: ObservableObject {
             .document()
         
         let recivierDocData = [
-            "fromID" : fromID,
-            "toID" : toID,
-            "text" : chatText,
-            "timestamp" : Date() // !
+            FirebaseConstants.fromID : fromID,
+            FirebaseConstants.toID : toID,
+            FirebaseConstants.text : chatText,
+            FirebaseConstants.timestamp : Date()
         ] as [String: Any]
         
         recivierDocument.setData(recivierDocData) { err in
@@ -99,6 +100,35 @@ class ChatLogViewModel: ObservableObject {
             }
         }
         //--
+    }
+    
+    func persistRecentMessages(){
+        guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let toID = self.ChatingPerson?.id else {return}
+        guard let chatingPerson = self.ChatingPerson else {return}
+        
+        let document = FirebaseManager.shared.firestore
+            .collection("recent_messages")
+            .document(fromID)
+            .collection("messages")
+            .document(toID)
+        
+        let docData = [
+            FirebaseConstants.timestamp : Date(),
+            FirebaseConstants.text : chatText,
+            FirebaseConstants.fromID : fromID,
+            FirebaseConstants.toID : toID,
+            FirebaseConstants.email : chatingPerson.email,
+            FirebaseConstants.profileUrl : chatingPerson.profileUrl
+        ] as [String: Any]
+        
+        document.setData(docData) { err in
+            if let err = err{
+                self.ErrMessage = "\(err.localizedDescription)"
+                return
+            }
+            self.chatText = ""
+        }
         
     }
 }
