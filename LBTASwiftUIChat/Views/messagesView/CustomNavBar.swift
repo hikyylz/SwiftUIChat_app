@@ -19,10 +19,9 @@ struct CustomNavBar: View {
             WebImage(url: URL(string: MainMessageVM.chatUser?.profileUrl ?? "" ))
                 .resizable()
                 .scaledToFill()
-                .padding(5)
                 .frame(width: 62, height: 62)
                 .clipShape(Circle())
-                .shadow(radius: 5)
+                .shadow(radius: 10)
                 .onTapGesture {
                     shoulShorProfileView.toggle()
                 }
@@ -34,8 +33,9 @@ struct CustomNavBar: View {
                     .font(.system(size: 20, weight: .semibold))
                 HStack{
                     Circle()
-                        .frame(width: 14, height: 14)
+                        .frame(width: 10, height: 10)
                         .foregroundColor(.green)
+                        .shadow(color: .green, radius: 10)
                         
                     Text("online")
                         .font(.system(size: 14))
@@ -63,8 +63,9 @@ struct CustomNavBar: View {
     }
 }
 
-//#Preview {
-//    CustomNavBar()
-//}
+#Preview {
+    //CustomNavBar()
+    NewMessagesView()
+}
 
 

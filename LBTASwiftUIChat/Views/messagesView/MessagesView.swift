@@ -13,7 +13,7 @@ struct MessagesView: View {
         ScrollView {
             ForEach(0..<20) { _ in
                 NavigationLink {
-                    ChatView()
+                    ChatView(ChatUser: nil)
                 } label: {
                     HStack(spacing: 16){
                         Image(systemName: "person.fill")
