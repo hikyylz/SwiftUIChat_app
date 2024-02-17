@@ -6,34 +6,35 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct MessagesView: View {
+    @ObservedObject var MainMessageVM : MainMessagesViewModel
     
     var body: some View {
         ScrollView {
-            ForEach(0..<20) { _ in
+            ForEach(MainMessageVM.recentMessages) { recentMessage in
                 NavigationLink {
                     ChatView(ChatUser: nil)
                 } label: {
                     HStack(spacing: 16){
-                        Image(systemName: "person.fill")
-                            .font(.system(size: 20))
-                            .padding(10)
-                            .overlay {
-                                Circle()
-                                    .stroke()
-                                    .foregroundColor(.black.opacity(0.5))
-                            }
+                        WebImage(url: URL(string: recentMessage.profileUrl))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
+                            .padding(.trailing, 10)
                         
                         
                         VStack(alignment: .leading){
-                            Text("user name")
-                            Text("user message")
+                            Text("\(recentMessage.email.replacingOccurrences(of: "@gmail.com", with: ""))")
+                            Text("\(recentMessage.text)")
                                 .font(.system(size: 14))
                                 .foregroundStyle(Color.gray)
                         }
                         Spacer()
-                        Text("22d")
+                        Text("\(recentMessage.timestamp.description)")
                             .font(.system(.caption))
                     }
                     .padding(.vertical, 10)
@@ -42,8 +43,12 @@ struct MessagesView: View {
                 
                 Divider()
             }
+            
+            HStack{
+                Spacer()
+            }
         }
-        .padding(.horizontal)
+        .padding()
     }
 }
 

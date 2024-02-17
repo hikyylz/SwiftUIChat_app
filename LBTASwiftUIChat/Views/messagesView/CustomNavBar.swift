@@ -19,7 +19,7 @@ struct CustomNavBar: View {
             WebImage(url: URL(string: MainMessageVM.chatUser?.profileUrl ?? "" ))
                 .resizable()
                 .scaledToFill()
-                .frame(width: 62, height: 62)
+                .frame(width: 64, height: 64)
                 .clipShape(Circle())
                 .shadow(radius: 10)
                 .onTapGesture {

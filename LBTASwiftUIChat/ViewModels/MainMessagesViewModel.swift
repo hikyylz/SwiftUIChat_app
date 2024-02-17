@@ -12,9 +12,41 @@ class MainMessagesViewModel: ObservableObject {
     @Published var errMessage: String = ""
     @Published var chatUser: ChatUserInfo?
     @Published var isCurrentlyUserLogedIn: Bool = false
+    @Published var recentMessages = [RecentMessage]()
     
     init() {
         fetchCurrentUser()
+        fetchRecentMessages()
+    }
+    
+    /// this func fecth last message of everyones last chat weit me.
+    private func fetchRecentMessages(){
+        guard let userId = FirebaseManager.shared.auth.currentUser?.uid else {
+            return
+        }
+        FirebaseManager.shared.firestore
+            .collection("recent_messages")
+            .document(userId)
+            .collection("messages")
+            .addSnapshotListener { querySnap, err in
+                if let err = err {
+                    self.errMessage = "\(err.localizedDescription)"
+                    return
+                }
+                
+                querySnap?.documentChanges.forEach({ change in
+                    let docID = change.document.documentID
+                    
+                    // her mesajlaşmanın en son kaydedilmiş mesajını değiştirmem lazım.
+                    if let index = self.recentMessages.firstIndex(where: { recentMessage in
+                        return recentMessage.documentId == docID
+                    }){
+                        self.recentMessages.remove(at: index)
+                    }
+                    let newRecentMessage = RecentMessage(documentId: docID, data: change.document.data())
+                    self.recentMessages.insert(newRecentMessage, at: 0)
+                })
+            }
     }
     
     private func fetchCurrentUser(){
