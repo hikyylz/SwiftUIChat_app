@@ -53,6 +53,8 @@ class ChatLogViewModel: ObservableObject {
     }
     
     func handleSend(){
+        let chattext = self.chatText
+        self.chatText = ""
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
         guard let toID = ChatingPerson?.id else { return }
         // firebase de değişkenleri tutma yöntemim benim yaratıcılığım olacaktır.
@@ -68,7 +70,7 @@ class ChatLogViewModel: ObservableObject {
         let docData = [
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
-            FirebaseConstants.text : chatText,
+            FirebaseConstants.text : chattext,
             FirebaseConstants.timestamp : Date()
         ] as [String: Any]
         
@@ -76,7 +78,7 @@ class ChatLogViewModel: ObservableObject {
             if let err = err{
                 self.ErrMessage = err.localizedDescription
             }
-            self.persistRecentMessages()
+            self.persistRecentMessages(chattext: chattext)
             self.messageSend.toggle() // scroll viewreader için proxy değişkeni bu değişken. scroll down yapmama yarıyor.
         }
         
@@ -90,7 +92,7 @@ class ChatLogViewModel: ObservableObject {
         let recivierDocData = [
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
-            FirebaseConstants.text : chatText,
+            FirebaseConstants.text : chattext,
             FirebaseConstants.timestamp : Date()
         ] as [String: Any]
         
@@ -102,7 +104,7 @@ class ChatLogViewModel: ObservableObject {
         //--
     }
     
-    func persistRecentMessages(){
+    func persistRecentMessages(chattext: String){
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else {return}
         guard let toID = self.ChatingPerson?.id else {return}
         guard let chatingPerson = self.ChatingPerson else {return}
@@ -115,7 +117,7 @@ class ChatLogViewModel: ObservableObject {
         
         let docData = [
             FirebaseConstants.timestamp : Date(),
-            FirebaseConstants.text : chatText,
+            FirebaseConstants.text : chattext,
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
             FirebaseConstants.email : chatingPerson.email,
@@ -127,8 +129,47 @@ class ChatLogViewModel: ObservableObject {
                 self.ErrMessage = "\(err.localizedDescription)"
                 return
             }
-            self.chatText = ""
         }
+        //
+        let recieverDocument = FirebaseManager.shared.firestore
+            .collection("recent_messages")
+            .document(toID)
+            .collection("messages")
+            .document(fromID)
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(fromID)
+            .getDocument { docSnap, err in
+                if let _ = err{
+                    self.ErrMessage = "karşı tarafa recent message kaydediyim derken olmadı."
+                    return
+                }
+                let myData = docSnap?.data()
+                let profileUrl = myData!["profileUrl"] as? String ?? ""
+                let email = myData!["email"] as? String ?? ""
+                
+                let recieverDocData = [
+                    FirebaseConstants.timestamp : Date(),
+                    FirebaseConstants.text : chattext,
+                    FirebaseConstants.fromID : fromID,
+                    FirebaseConstants.toID : toID,
+                    FirebaseConstants.email : email,  // kendi email imi vermem lazım
+                    FirebaseConstants.profileUrl : profileUrl  // kendi pp mi vermem lazım.
+                ] as [String: Any]
+                
+                recieverDocument.setData(recieverDocData) { err in
+                    if let err = err{
+                        self.ErrMessage = "\(err.localizedDescription)"
+                        return
+                    }
+                }
+                
+            }
+        
+        
+        
+        
         
     }
 }

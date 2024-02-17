@@ -15,7 +15,7 @@ struct MessagesView: View {
         ScrollView {
             ForEach(MainMessageVM.recentMessages) { recentMessage in
                 NavigationLink {
-                    ChatView(ChatUser: nil)
+                    ChatView(ChatUser: nil )
                 } label: {
                     HStack(spacing: 16){
                         WebImage(url: URL(string: recentMessage.profileUrl))
