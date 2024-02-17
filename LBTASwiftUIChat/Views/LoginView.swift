@@ -145,7 +145,7 @@ struct loginView: View {
         guard let imageData = self.selectedImage?.jpegData(compressionQuality: 0.5) else{
             self.logInstatusMessage = "Select user photo"
             FirebaseManager.shared.auth.currentUser?.delete(completion: { err in
-                if let err = err{
+                if let _ = err{
                     self.logInstatusMessage = "user did not deleted, he did not choose phtoto thats the reason of attemp of deleting."
                     return
                 }

@@ -15,7 +15,12 @@ struct MessagesView: View {
         ScrollView {
             ForEach(MainMessageVM.recentMessages) { recentMessage in
                 NavigationLink {
-                    ChatView(ChatUser: nil )
+                    if MainMessageVM.chatUser?.uid == recentMessage.fromID{
+                        ChatView(ChatUser: .init(uid: recentMessage.toID, email: recentMessage.email, profileUrl: recentMessage.profileUrl))
+                    }else{
+                        ChatView(ChatUser: .init(uid: recentMessage.fromID, email: recentMessage.email, profileUrl: recentMessage.profileUrl))
+                    }
+                    
                 } label: {
                     HStack(spacing: 16){
                         WebImage(url: URL(string: recentMessage.profileUrl))
@@ -28,10 +33,12 @@ struct MessagesView: View {
                         
                         
                         VStack(alignment: .leading){
+                            
                             Text("\(recentMessage.email.replacingOccurrences(of: "@gmail.com", with: ""))")
                             Text("\(recentMessage.text)")
                                 .font(.system(size: 14))
                                 .foregroundStyle(Color.gray)
+                                .multilineTextAlignment(.leading)
                         }
                         Spacer()
                         Text("\(recentMessage.timestamp.description)")
