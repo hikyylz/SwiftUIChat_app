@@ -20,7 +20,6 @@ struct MessagesView: View {
                     }else{
                         ChatView(ChatUser: .init(uid: recentMessage.fromID, email: recentMessage.email, profileUrl: recentMessage.profileUrl))
                     }
-                    
                 } label: {
                     HStack(spacing: 16){
                         WebImage(url: URL(string: recentMessage.profileUrl))
@@ -41,12 +40,25 @@ struct MessagesView: View {
                                 .multilineTextAlignment(.leading)
                         }
                         Spacer()
-                        Text("\(recentMessage.timestamp.description)")
+                        let timestampValue : String = recentMessage.timestamp
+                        Text(timestampValue.replacingOccurrences(of: "+0000", with: ""))
                             .font(.system(.caption))
                     }
                     .padding(.vertical, 10)
                 }
                 .foregroundStyle(Color.black)
+                .contextMenu(menuItems: {
+                    Button(action: {
+                        
+                    }, label: {
+                        Text("Button 1")
+                    })
+                    Button(action: {
+                        
+                    }, label: {
+                        Text("Button 2")
+                    })
+                })
                 
                 Divider()
             }

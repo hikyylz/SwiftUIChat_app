@@ -57,6 +57,7 @@ class ChatLogViewModel: ObservableObject {
         self.chatText = ""
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
         guard let toID = ChatingPerson?.id else { return }
+        let dateNow : String = Date.now.description
         // firebase de değişkenleri tutma yöntemim benim yaratıcılığım olacaktır.
         // öncelikle course dakine uygun hareket edeceğim sonra istersem değiştirmeye çalışacağım çünkü mantıklı gelmedi
         
@@ -71,14 +72,14 @@ class ChatLogViewModel: ObservableObject {
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
             FirebaseConstants.text : chattext,
-            FirebaseConstants.timestamp : Date()
+            FirebaseConstants.timestamp : dateNow
         ] as [String: Any]
         
         document.setData(docData) { err in
             if let err = err{
                 self.ErrMessage = err.localizedDescription
             }
-            self.persistRecentMessages(chattext: chattext)
+            self.persistRecentMessages(chattext: chattext, dateNow: dateNow)
             self.messageSend.toggle() // scroll viewreader için proxy değişkeni bu değişken. scroll down yapmama yarıyor.
         }
         
@@ -93,7 +94,7 @@ class ChatLogViewModel: ObservableObject {
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
             FirebaseConstants.text : chattext,
-            FirebaseConstants.timestamp : Date()
+            FirebaseConstants.timestamp : dateNow
         ] as [String: Any]
         
         recivierDocument.setData(recivierDocData) { err in
@@ -104,7 +105,7 @@ class ChatLogViewModel: ObservableObject {
         //--
     }
     
-    func persistRecentMessages(chattext: String){
+    func persistRecentMessages(chattext: String, dateNow : String){
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else {return}
         guard let toID = self.ChatingPerson?.id else {return}
         guard let chatingPerson = self.ChatingPerson else {return}
@@ -116,7 +117,7 @@ class ChatLogViewModel: ObservableObject {
             .document(toID)
         
         let docData = [
-            FirebaseConstants.timestamp : Date(),
+            FirebaseConstants.timestamp : dateNow,
             FirebaseConstants.text : chattext,
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
@@ -150,7 +151,7 @@ class ChatLogViewModel: ObservableObject {
                 let email = myData!["email"] as? String ?? ""
                 
                 let recieverDocData = [
-                    FirebaseConstants.timestamp : Date(),
+                    FirebaseConstants.timestamp : dateNow,
                     FirebaseConstants.text : chattext,
                     FirebaseConstants.fromID : fromID,
                     FirebaseConstants.toID : toID,
@@ -164,12 +165,6 @@ class ChatLogViewModel: ObservableObject {
                         return
                     }
                 }
-                
             }
-        
-        
-        
-        
-        
     }
 }

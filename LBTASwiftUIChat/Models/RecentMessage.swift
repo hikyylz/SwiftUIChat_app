@@ -12,7 +12,7 @@ struct RecentMessage: Identifiable {
     let documentId: String
     let text, fromID, toID: String
     let email, profileUrl: String
-    let timestamp: Date
+    let timestamp: String
     
     init(documentId: String, data: [String: Any]){
         self.documentId = documentId
@@ -21,7 +21,12 @@ struct RecentMessage: Identifiable {
         self.fromID = data["fromID"] as? String ?? ""
         self.toID = data["toID"] as? String ?? ""
         self.profileUrl = data["profileUrl"] as? String ?? ""
-        self.timestamp = data["timestamp"] as? Date ?? Date()
+        if let datesaved = data["timestamp"] as? String{
+            self.timestamp = datesaved
+        }else{
+            self.timestamp = "amk date()"
+            print("amk------------ burdaymıs------------")
+        }
     }
     
 }
