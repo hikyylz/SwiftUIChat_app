@@ -63,6 +63,31 @@ class ChatLogViewModel: ObservableObject {
     
     func handleSendPhoto(){
         guard let photoData = self.selectedImageToShare?.jpegData(compressionQuality: 0.5) else{ return }
+        let firebaseReferance = FirebaseManager.shared.storage.reference()
+        let sharedPhotosStorage = firebaseReferance.child("sharedPhotos/\(UUID())")
+        sharedPhotosStorage.putData(photoData) { _ , err in
+            if let _ = err{
+                print("-----1-----")
+                return
+            }
+            
+            sharedPhotosStorage.downloadURL { sharedPhotoURL, err in
+                if let _ = err{
+                    print("-----2-----")
+                    return
+                }
+                guard let sharedPhotoURL = sharedPhotoURL else{
+                    print("-----3-----")
+                    return
+                }
+                self.savePhotoMessage(photoURL: sharedPhotoURL.absoluteString)
+            }
+            
+        }
+    }
+    
+    func savePhotoMessage(photoURL : String){
+        print("-----sorunsuz geldi 1-----")
         self.selectedImageToShare = nil
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
         guard let toID = ChatingPerson?.id else { return }
@@ -78,7 +103,7 @@ class ChatLogViewModel: ObservableObject {
         let docData = [
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
-            FirebaseConstants.photoData : photoData,
+            FirebaseConstants.photoUrl : photoURL,
             FirebaseConstants.timestamp : dateNow
         ] as [String: Any]
         
@@ -86,10 +111,12 @@ class ChatLogViewModel: ObservableObject {
             if let err = err{
                 self.ErrMessage = err.localizedDescription
             }
-            self.persistRecentPhotoMessages(photoData: photoData, dateNow: dateNow)
+            print("-----sorunsuz geldi 2-----")
+            self.persistRecentPhotoMessages(photoURL: photoURL, dateNow: dateNow)
             self.messageSend.toggle() // scroll viewreader için proxy değişkeni bu değişken. scroll down yapmama yarıyor.
         }
         
+        print("-----sorunsuz geldi 3-----")
         //--
         
         let recivierDocument = FirebaseManager.shared.firestore
@@ -101,7 +128,7 @@ class ChatLogViewModel: ObservableObject {
         let recivierDocData = [
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
-            FirebaseConstants.photoData : photoData,
+            FirebaseConstants.photoUrl : photoURL,
             FirebaseConstants.timestamp : dateNow
         ] as [String: Any]
         
@@ -111,7 +138,7 @@ class ChatLogViewModel: ObservableObject {
             }
         }
         //--
-        self.selectedImageToShare = nil
+        print("-----sorunsuz geldi 4-----")
     }
     
     
@@ -232,7 +259,7 @@ class ChatLogViewModel: ObservableObject {
     }
     
     
-    func persistRecentPhotoMessages(photoData: Data, dateNow : String){
+    func persistRecentPhotoMessages(photoURL: String, dateNow : String){
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else {return}
         guard let toID = self.ChatingPerson?.id else {return}
         guard let chatingPerson = self.ChatingPerson else {return}
@@ -245,7 +272,7 @@ class ChatLogViewModel: ObservableObject {
         
         let docData = [
             FirebaseConstants.timestamp : dateNow,
-            FirebaseConstants.photoData : photoData,
+            FirebaseConstants.photoUrl : photoURL,
             FirebaseConstants.fromID : fromID,
             FirebaseConstants.toID : toID,
             FirebaseConstants.email : chatingPerson.email,
@@ -279,7 +306,7 @@ class ChatLogViewModel: ObservableObject {
                 
                 let recieverDocData = [
                     FirebaseConstants.timestamp : dateNow,
-                    FirebaseConstants.photoData : photoData,
+                    FirebaseConstants.photoUrl : photoURL,
                     FirebaseConstants.fromID : fromID,
                     FirebaseConstants.toID : toID,
                     FirebaseConstants.email : email,  // kendi email imi vermem lazım

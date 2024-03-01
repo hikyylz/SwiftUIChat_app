@@ -18,7 +18,7 @@ protocol ChatMessage{
     var id: UUID { get }
     var fromID: String { get }
     var toID: String { get }
-    var timestamp: Date { get }
+    var timestamp: String { get }
     var messageType: messageType { get }
     
     func getmessageValue() -> String
@@ -29,14 +29,14 @@ struct ChatTextMessage : Identifiable, ChatMessage{
     var messageType: messageType = .text
     let id = UUID()
     let fromID, toID: String
-    var timestamp: Date
+    var timestamp: String
     let text: String
     
     init(data: [String: Any]){
         self.fromID = data["fromID"] as? String ?? ""
         self.toID = data["toID"] as? String ?? ""
         self.text = data["text"] as? String ?? ""
-        self.timestamp = data["timestamp"] as? Date ?? Date()
+        self.timestamp = data["timestamp"] as? String ?? ""
     }
     
     func getmessageValue() -> String{
@@ -48,17 +48,20 @@ struct ChatPhotoMessage : Identifiable, ChatMessage{
     var messageType: messageType = .photo
     let id = UUID()
     let fromID, toID : String
-    let timestamp: Date
-    let photoData: String
+    let timestamp: String
+    let photoUrl: String?
     
     init(data: [String: Any]){
         self.fromID = data["fromID"] as? String ?? ""
         self.toID = data["toID"] as? String ?? ""
-        self.photoData = data["photoData"] as? String ?? ""
-        self.timestamp = data["timestamp"] as? Date ?? Date()
+        self.photoUrl = data["photoUrl"] as? String
+        self.timestamp = data["timestamp"] as? String ?? ""
     }
     
     func getmessageValue() -> String {
-        return photoData
+        guard let photoUrl = photoUrl else{
+            return ""
+        }
+        return photoUrl
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct ChatView: View {
     @State var ChatUser: ChatUserInfo?
@@ -41,7 +42,6 @@ struct ChatView: View {
         }
         .fullScreenCover(isPresented: $shouldShowImagePicker, content: {
             ImagePicker(image: $ChatLogVM.selectedImageToShare )
-            
         })
     }
     
@@ -59,7 +59,6 @@ struct ChatView: View {
                         self.ChatLogVM.handleSendPhoto()
                     }, label: {
                         HStack{
-                            
                             Spacer()
                             Text("Send")
                                 .padding()
@@ -119,9 +118,10 @@ struct ChatView: View {
                         HStack{
                             Spacer()
                             HStack{
-//                                Image(uiImage: UIImage(data: Data(base64Encoded: messageBlok.getmessageValue())!)!)
-                                Text("-- image olmalı burda --")
-                                    .foregroundStyle(.white)
+                                WebImage(url: URL(string: messageBlok.getmessageValue()))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 100, height: 100)
                             }
                             .padding()
                             .background(.black)
@@ -144,9 +144,10 @@ struct ChatView: View {
                     }else if messageBlok.messageType == .photo{
                         HStack{
                             HStack{
-//                                Image(uiImage: UIImage(data: Data(base64Encoded: messageBlok.getmessageValue())!)!)
-                                Text("-- image olmalı burda --")
-                                    .foregroundStyle(.white)
+                                WebImage(url: URL(string: messageBlok.getmessageValue()))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 100, height: 100)
                             }
                             .padding()
                             .background(.black)

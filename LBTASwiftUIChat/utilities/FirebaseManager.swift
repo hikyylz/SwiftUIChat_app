@@ -37,6 +37,6 @@ struct FirebaseConstants{
     static let uid = "uid"
     static let email = "email"
     static let profileUrl = "profileUrl"
-    static let photoData = "photoData"
+    static let photoUrl = "photoUrl"
 }
 
