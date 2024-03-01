@@ -6,23 +6,27 @@
 //
 
 import Foundation
+import SwiftUI
+
 class ChatLogViewModel: ObservableObject {
     @Published var chatText: String = ""
+    @Published var selectedImageToShare : UIImage?
     @Published var ChatingPerson: ChatUserInfo?
     @Published var ErrMessage = String()
     @Published var chatMessages = [ChatMessage]()
     @Published var messageSend: Bool = false
+    @Published var disableTextSendButton: Bool = false
     
     init(ChatingPerson: ChatUserInfo?) {
         self.ChatingPerson = ChatingPerson
         fetchMessages()
+        
     }
     
     private func fetchMessages(){
         // bir insanla olan mesajlarımızı çekiyor gerçek zamanlı.
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
         guard let toID = ChatingPerson?.id else { return }
-        
         
         FirebaseManager.shared.firestore
             .collection("messages")
@@ -38,21 +42,80 @@ class ChatLogViewModel: ObservableObject {
                 querySnap?.documentChanges.forEach({ changeDocSnap in
                     if changeDocSnap.type == .added{
                         let messageDocument = changeDocSnap.document.data()
-                        let chatMessageBlok = ChatMessage(data: messageDocument)
-                        self.chatMessages.append(chatMessageBlok)
+                        
+                        // recent mesage text veya photo olabilir..
+                        if let _ = messageDocument[FirebaseConstants.text]{
+                            // text ise
+                            let chatMessageBlok = ChatTextMessage(data: messageDocument)
+                            self.chatMessages.append(chatMessageBlok)
+                        }else{
+                            // phtot ise
+                            let chatPhotoBlok = ChatPhotoMessage(data: messageDocument)
+                            self.chatMessages.append(chatPhotoBlok)
+                        }
                     }
                     self.messageSend.toggle() 
                 })
-                
-//                querySnap?.documents.forEach({ querDocSnap in
-//                    let messageDocument = querDocSnap.data()
-//                    let chatMessageBlok = ChatMessage(data: messageDocument)
-//                    self.chatMessages.append(chatMessageBlok)
-//                })
             }
     }
     
-    func handleSend(){
+    
+    
+    func handleSendPhoto(){
+        guard let photoData = self.selectedImageToShare?.jpegData(compressionQuality: 0.5) else{ return }
+        self.selectedImageToShare = nil
+        guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        guard let toID = ChatingPerson?.id else { return }
+        let dateNow : String = Date.now.description
+        
+        // aynı mesajı her iki insanın uid leri ile kaydediyor kod.
+        let document = FirebaseManager.shared.firestore
+            .collection("messages")
+            .document(fromID)
+            .collection(toID)
+            .document()
+        
+        let docData = [
+            FirebaseConstants.fromID : fromID,
+            FirebaseConstants.toID : toID,
+            FirebaseConstants.photoData : photoData,
+            FirebaseConstants.timestamp : dateNow
+        ] as [String: Any]
+        
+        document.setData(docData) { err in
+            if let err = err{
+                self.ErrMessage = err.localizedDescription
+            }
+            self.persistRecentPhotoMessages(photoData: photoData, dateNow: dateNow)
+            self.messageSend.toggle() // scroll viewreader için proxy değişkeni bu değişken. scroll down yapmama yarıyor.
+        }
+        
+        //--
+        
+        let recivierDocument = FirebaseManager.shared.firestore
+            .collection("messages")
+            .document(toID)
+            .collection(fromID)
+            .document()
+        
+        let recivierDocData = [
+            FirebaseConstants.fromID : fromID,
+            FirebaseConstants.toID : toID,
+            FirebaseConstants.photoData : photoData,
+            FirebaseConstants.timestamp : dateNow
+        ] as [String: Any]
+        
+        recivierDocument.setData(recivierDocData) { err in
+            if let err = err{
+                self.ErrMessage = err.localizedDescription
+            }
+        }
+        //--
+        self.selectedImageToShare = nil
+    }
+    
+    
+    func handleSendText(){
         let chattext = self.chatText
         self.chatText = ""
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
@@ -79,7 +142,7 @@ class ChatLogViewModel: ObservableObject {
             if let err = err{
                 self.ErrMessage = err.localizedDescription
             }
-            self.persistRecentMessages(chattext: chattext, dateNow: dateNow)
+            self.persistRecentTextMessages(chattext: chattext, dateNow: dateNow)
             self.messageSend.toggle() // scroll viewreader için proxy değişkeni bu değişken. scroll down yapmama yarıyor.
         }
         
@@ -105,7 +168,7 @@ class ChatLogViewModel: ObservableObject {
         //--
     }
     
-    func persistRecentMessages(chattext: String, dateNow : String){
+    func persistRecentTextMessages(chattext: String, dateNow : String){
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else {return}
         guard let toID = self.ChatingPerson?.id else {return}
         guard let chatingPerson = self.ChatingPerson else {return}
@@ -153,6 +216,70 @@ class ChatLogViewModel: ObservableObject {
                 let recieverDocData = [
                     FirebaseConstants.timestamp : dateNow,
                     FirebaseConstants.text : chattext,
+                    FirebaseConstants.fromID : fromID,
+                    FirebaseConstants.toID : toID,
+                    FirebaseConstants.email : email,  // kendi email imi vermem lazım
+                    FirebaseConstants.profileUrl : profileUrl  // kendi pp mi vermem lazım.
+                ] as [String: Any]
+                
+                recieverDocument.setData(recieverDocData) { err in
+                    if let err = err{
+                        self.ErrMessage = "\(err.localizedDescription)"
+                        return
+                    }
+                }
+            }
+    }
+    
+    
+    func persistRecentPhotoMessages(photoData: Data, dateNow : String){
+        guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let toID = self.ChatingPerson?.id else {return}
+        guard let chatingPerson = self.ChatingPerson else {return}
+        
+        let document = FirebaseManager.shared.firestore
+            .collection("recent_messages")
+            .document(fromID)
+            .collection("messages")
+            .document(toID)
+        
+        let docData = [
+            FirebaseConstants.timestamp : dateNow,
+            FirebaseConstants.photoData : photoData,
+            FirebaseConstants.fromID : fromID,
+            FirebaseConstants.toID : toID,
+            FirebaseConstants.email : chatingPerson.email,
+            FirebaseConstants.profileUrl : chatingPerson.profileUrl
+        ] as [String: Any]
+        
+        document.setData(docData) { err in
+            if let err = err{
+                self.ErrMessage = "\(err.localizedDescription)"
+                return
+            }
+        }
+        //
+        let recieverDocument = FirebaseManager.shared.firestore
+            .collection("recent_messages")
+            .document(toID)
+            .collection("messages")
+            .document(fromID)
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(fromID)
+            .getDocument { docSnap, err in
+                if let _ = err{
+                    self.ErrMessage = "karşı tarafa recent message kaydediyim derken olmadı."
+                    return
+                }
+                let myData = docSnap?.data()
+                let profileUrl = myData!["profileUrl"] as? String ?? ""
+                let email = myData!["email"] as? String ?? ""
+                
+                let recieverDocData = [
+                    FirebaseConstants.timestamp : dateNow,
+                    FirebaseConstants.photoData : photoData,
                     FirebaseConstants.fromID : fromID,
                     FirebaseConstants.toID : toID,
                     FirebaseConstants.email : email,  // kendi email imi vermem lazım

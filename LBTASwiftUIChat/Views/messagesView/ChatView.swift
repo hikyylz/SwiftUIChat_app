@@ -10,12 +10,14 @@ import SwiftUI
 struct ChatView: View {
     @State var ChatUser: ChatUserInfo?
     @ObservedObject var ChatLogVM: ChatLogViewModel
-    
+    @State var shouldShowImagePicker: Bool = false
+    var selectedImageViewBackgroundColor: Color = Color.gray.opacity(1.5)
     
     init(ChatUser: ChatUserInfo?) {
         self.ChatUser = ChatUser
         self.ChatLogVM = ChatLogViewModel(ChatingPerson: ChatUser)
     }
+    
     
     var body: some View {
         NavigationStack{
@@ -27,11 +29,48 @@ struct ChatView: View {
                     chatMessagesView
                     ChatButtonBar
                 }
+                
+                if ChatLogVM.selectedImageToShare != nil {
+                    PhotoShareView
+                        .padding()
+                }
             }
              
             .navigationTitle(ChatUser?.email ?? "person")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .fullScreenCover(isPresented: $shouldShowImagePicker, content: {
+            ImagePicker(image: $ChatLogVM.selectedImageToShare )
+            
+        })
+    }
+    
+    
+    private var PhotoShareView: some View{
+        RoundedRectangle(cornerRadius: 15.0)
+            .foregroundStyle(selectedImageViewBackgroundColor.opacity(0.8))
+            .overlay {
+                VStack(spacing: 50){
+                    Image(uiImage: ChatLogVM.selectedImageToShare!)
+                        .resizable()
+                        .scaledToFit()
+                        .shadow(radius: 10)
+                    Button(action: {
+                        self.ChatLogVM.handleSendPhoto()
+                    }, label: {
+                        HStack{
+                            
+                            Spacer()
+                            Text("Send")
+                                .padding()
+                            Spacer()
+                        }
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 15.0))
+                    })
+                }
+                .padding(.horizontal)
+            }
     }
     
     private let endofscrolview: String = "endofscrolview"
@@ -40,7 +79,8 @@ struct ChatView: View {
         ScrollView{
             ScrollViewReader(content: { proxy in  // bu rerader scroll view için bir ayar mekanızması gibi çalıştığını düşünebiliriz. proxy değişkeniyle scrollV için scrol etme özelliğiyle oynayabiliyorum.
                 VStack{
-                    ForEach(self.ChatLogVM.chatMessages) { messageBlok in
+                    
+                    ForEach(self.ChatLogVM.chatMessages, id: \.id) { messageBlok in
                         messageView(messageBlok: messageBlok)
                     }
                     HStack{}
@@ -64,26 +104,55 @@ struct ChatView: View {
         var body: some View{
             VStack{
                 if FirebaseManager.shared.auth.currentUser?.uid == messageBlok.fromID{
-                    HStack{
-                        Spacer()
+                    if messageBlok.messageType == .text{
                         HStack{
-                            Text(messageBlok.text)
-                                .foregroundStyle(.white)
+                            Spacer()
+                            HStack{
+                                Text(messageBlok.getmessageValue())
+                                    .foregroundStyle(.white)
+                            }
+                            .padding()
+                            .background(.black)
+                            .clipShape(RoundedRectangle(cornerRadius: 10.0))
                         }
-                        .padding()
-                        .background(.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                    }else if messageBlok.messageType == .photo{
+                        HStack{
+                            Spacer()
+                            HStack{
+//                                Image(uiImage: UIImage(data: Data(base64Encoded: messageBlok.getmessageValue())!)!)
+                                Text("-- image olmalı burda --")
+                                    .foregroundStyle(.white)
+                            }
+                            .padding()
+                            .background(.black)
+                            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                        }
                     }
+                    
                 }else{
-                    HStack{
+                    if messageBlok.messageType == .text{
                         HStack{
-                            Text(messageBlok.text)
-                                .foregroundStyle(.black)
+                            HStack{
+                                Text(messageBlok.getmessageValue())
+                                    .foregroundStyle(.white)
+                            }
+                            .padding()
+                            .background(.black)
+                            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                            Spacer()
                         }
-                        .padding()
-                        .background(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                        Spacer()
+                    }else if messageBlok.messageType == .photo{
+                        HStack{
+                            HStack{
+//                                Image(uiImage: UIImage(data: Data(base64Encoded: messageBlok.getmessageValue())!)!)
+                                Text("-- image olmalı burda --")
+                                    .foregroundStyle(.white)
+                            }
+                            .padding()
+                            .background(.black)
+                            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                            Spacer()
+                        }
                     }
                 }
             }
@@ -96,12 +165,13 @@ struct ChatView: View {
         HStack(spacing: 20){
             Image(systemName: "square.and.arrow.up.on.square")
                 .onTapGesture {
-                    
+                    self.shouldShowImagePicker.toggle()
                 }
             TextField("Description", text: $ChatLogVM.chatText)
             Button("Send") {
-                self.ChatLogVM.handleSend()
+                self.ChatLogVM.handleSendText()
             }
+            .disabled(ChatLogVM.disableTextSendButton)
         }
         .padding(.top, 20)
         .padding(.horizontal, 20)

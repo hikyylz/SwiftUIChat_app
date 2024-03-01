@@ -7,15 +7,58 @@
 
 import Foundation
 
-struct ChatMessage : Identifiable{
+
+enum messageType {
+    case text
+    case photo
+}
+
+// buradaki modeller çok güzel interface kullanım örneği :)
+protocol ChatMessage{
+    var id: UUID { get }
+    var fromID: String { get }
+    var toID: String { get }
+    var timestamp: Date { get }
+    var messageType: messageType { get }
+    
+    func getmessageValue() -> String
+}
+
+
+struct ChatTextMessage : Identifiable, ChatMessage{
+    var messageType: messageType = .text
     let id = UUID()
-    let fromID, toID, text : String
-    let timestamp: Date
+    let fromID, toID: String
+    var timestamp: Date
+    let text: String
     
     init(data: [String: Any]){
         self.fromID = data["fromID"] as? String ?? ""
         self.toID = data["toID"] as? String ?? ""
         self.text = data["text"] as? String ?? ""
         self.timestamp = data["timestamp"] as? Date ?? Date()
+    }
+    
+    func getmessageValue() -> String{
+        return text
+    }
+}
+
+struct ChatPhotoMessage : Identifiable, ChatMessage{
+    var messageType: messageType = .photo
+    let id = UUID()
+    let fromID, toID : String
+    let timestamp: Date
+    let photoData: String
+    
+    init(data: [String: Any]){
+        self.fromID = data["fromID"] as? String ?? ""
+        self.toID = data["toID"] as? String ?? ""
+        self.photoData = data["photoData"] as? String ?? ""
+        self.timestamp = data["timestamp"] as? Date ?? Date()
+    }
+    
+    func getmessageValue() -> String {
+        return photoData
     }
 }

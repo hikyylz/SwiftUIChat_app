@@ -14,20 +14,27 @@ struct NewMessagesView: View {
     @StateObject private var MainMessageVM = MainMessagesViewModel()
     @State var CurrentChatPerson: ChatUserInfo?
     @State var shouldShowChatView: Bool = false
+    @State var newMessagesBackgoundColor: Color = Color.blue.opacity(0.2)
     
     var body: some View {
+        
         NavigationStack {
-            NavigationLink("", isActive: $shouldShowChatView) {
-                ChatView(ChatUser: CurrentChatPerson)
+            ZStack{
+                newMessagesBackgoundColor.ignoresSafeArea()
+                
+                NavigationLink("", isActive: $shouldShowChatView) {
+                    ChatView(ChatUser: CurrentChatPerson)
+                }
+                VStack{
+                    CustomNavBar(MainMessageVM: MainMessageVM, shouldShoeLogoutOptions: $shouldShoeLogoutOptions, shoulShorProfileView: $shoulShorProfileView)
+                    MessagesView(MainMessageVM: MainMessageVM)
+                        .overlay(alignment: .bottom) {
+                            newMessageButtonView(shouldShowNewMessageScreen: $shouldShowNewMessageScreen)
+                        }
+                }
+                .toolbar(.hidden)
             }
-            VStack{
-                CustomNavBar(MainMessageVM: MainMessageVM, shouldShoeLogoutOptions: $shouldShoeLogoutOptions, shoulShorProfileView: $shoulShorProfileView)
-                MessagesView(MainMessageVM: MainMessageVM)
-                    .overlay(alignment: .bottom) {
-                        newMessageButtonView(shouldShowNewMessageScreen: $shouldShowNewMessageScreen)
-                    }
-            }
-            .toolbar(.hidden)
+            
         }
         .fullScreenCover(isPresented: $MainMessageVM.isCurrentlyUserLogedIn, content: {
             loginView()
