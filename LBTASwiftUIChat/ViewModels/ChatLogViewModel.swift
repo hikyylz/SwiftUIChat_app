@@ -23,6 +23,7 @@ class ChatLogViewModel: ObservableObject {
         
     }
     
+    
     private func fetchMessages(){
         // bir insanla olan mesajlarımızı çekiyor gerçek zamanlı.
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
@@ -62,7 +63,8 @@ class ChatLogViewModel: ObservableObject {
     
     
     func handleSendPhoto(){
-        guard let photoData = self.selectedImageToShare?.jpegData(compressionQuality: 0.5) else{ return }
+        guard let photoData = self.selectedImageToShare?.jpegData(compressionQuality: 0.2) else{ return }
+        self.selectedImageToShare = nil
         let firebaseReferance = FirebaseManager.shared.storage.reference()
         let sharedPhotosStorage = firebaseReferance.child("sharedPhotos/\(UUID())")
         sharedPhotosStorage.putData(photoData) { _ , err in
@@ -88,7 +90,6 @@ class ChatLogViewModel: ObservableObject {
     
     func savePhotoMessage(photoURL : String){
         print("-----sorunsuz geldi 1-----")
-        self.selectedImageToShare = nil
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
         guard let toID = ChatingPerson?.id else { return }
         let dateNow : String = Date.now.description

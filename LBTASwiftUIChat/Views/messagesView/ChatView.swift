@@ -12,6 +12,7 @@ struct ChatView: View {
     @State var ChatUser: ChatUserInfo?
     @ObservedObject var ChatLogVM: ChatLogViewModel
     @State var shouldShowImagePicker: Bool = false
+    @State var shouldShowSheet: Bool = false
     var selectedImageViewBackgroundColor: Color = Color.gray.opacity(1.5)
     
     init(ChatUser: ChatUserInfo?) {
@@ -30,11 +31,6 @@ struct ChatView: View {
                     chatMessagesView
                     ChatButtonBar
                 }
-                
-                if ChatLogVM.selectedImageToShare != nil {
-                    PhotoShareView
-                        .padding()
-                }
             }
              
             .navigationTitle(ChatUser?.email ?? "person")
@@ -43,6 +39,13 @@ struct ChatView: View {
         .fullScreenCover(isPresented: $shouldShowImagePicker, content: {
             ImagePicker(image: $ChatLogVM.selectedImageToShare )
         })
+        .sheet(isPresented: (ChatLogVM.selectedImageToShare == nil) ? .constant(false) : .constant(true)) {
+            PhotoShareView
+                .padding()
+                .onDisappear(perform: {
+                    ChatLogVM.selectedImageToShare = nil
+                })
+        }
     }
     
     
@@ -50,11 +53,12 @@ struct ChatView: View {
         RoundedRectangle(cornerRadius: 15.0)
             .foregroundStyle(selectedImageViewBackgroundColor.opacity(0.8))
             .overlay {
-                VStack(spacing: 50){
+                VStack(spacing: 10){
                     Image(uiImage: ChatLogVM.selectedImageToShare!)
                         .resizable()
                         .scaledToFit()
                         .shadow(radius: 10)
+                        .padding(.bottom, 10)
                     Button(action: {
                         self.ChatLogVM.handleSendPhoto()
                     }, label: {
@@ -62,6 +66,21 @@ struct ChatView: View {
                             Spacer()
                             Text("Send")
                                 .padding()
+                                .font(.caption)
+                            Spacer()
+                        }
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 15.0))
+                    })
+                    Button(action: {
+                        self.ChatLogVM.selectedImageToShare = nil
+                    }, label: {
+                        HStack{
+                            Spacer()
+                            Text("Cansel")
+                                .font(.caption)
+                                .padding()
+                                .foregroundStyle(Color.red)
                             Spacer()
                         }
                         .background(Color.white)
@@ -78,7 +97,6 @@ struct ChatView: View {
         ScrollView{
             ScrollViewReader(content: { proxy in  // bu rerader scroll view için bir ayar mekanızması gibi çalıştığını düşünebiliriz. proxy değişkeniyle scrollV için scrol etme özelliğiyle oynayabiliyorum.
                 VStack{
-                    
                     ForEach(self.ChatLogVM.chatMessages, id: \.id) { messageBlok in
                         messageView(messageBlok: messageBlok)
                     }
@@ -87,13 +105,11 @@ struct ChatView: View {
                 }
                 .onReceive(ChatLogVM.$messageSend, perform: { _ in  // bu blok bu view un kullandığı bir değişken değiştiğinde çalışması için bir takım aksiyonlar yazabilmeme yarıyoır.
                     
-                    withAnimation(.easeOut(duration: 0.5)) {
+                    withAnimation(.easeInOut(duration: 0.5)) {
                         proxy.scrollTo(endofscrolview, anchor: .bottom)
                     }
                 })
-                
             })
-            
         }
     }
     
