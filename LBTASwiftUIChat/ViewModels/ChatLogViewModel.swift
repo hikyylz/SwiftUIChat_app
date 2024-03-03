@@ -16,6 +16,7 @@ class ChatLogViewModel: ObservableObject {
     @Published var chatMessages = [ChatMessage]()
     @Published var messageSend: Bool = false
     @Published var disableTextSendButton: Bool = false
+    @Published var shouldShowPhotoSendingProgresBar : Bool = false
     
     init(ChatingPerson: ChatUserInfo?) {
         self.ChatingPerson = ChatingPerson
@@ -65,21 +66,19 @@ class ChatLogViewModel: ObservableObject {
     func handleSendPhoto(){
         guard let photoData = self.selectedImageToShare?.jpegData(compressionQuality: 0.2) else{ return }
         self.selectedImageToShare = nil
+        self.shouldShowPhotoSendingProgresBar.toggle()
         let firebaseReferance = FirebaseManager.shared.storage.reference()
         let sharedPhotosStorage = firebaseReferance.child("sharedPhotos/\(UUID())")
         sharedPhotosStorage.putData(photoData) { _ , err in
             if let _ = err{
-                print("-----1-----")
                 return
             }
             
             sharedPhotosStorage.downloadURL { sharedPhotoURL, err in
                 if let _ = err{
-                    print("-----2-----")
                     return
                 }
                 guard let sharedPhotoURL = sharedPhotoURL else{
-                    print("-----3-----")
                     return
                 }
                 self.savePhotoMessage(photoURL: sharedPhotoURL.absoluteString)
@@ -89,7 +88,6 @@ class ChatLogViewModel: ObservableObject {
     }
     
     func savePhotoMessage(photoURL : String){
-        print("-----sorunsuz geldi 1-----")
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
         guard let toID = ChatingPerson?.id else { return }
         let dateNow : String = Date.now.description
@@ -112,12 +110,11 @@ class ChatLogViewModel: ObservableObject {
             if let err = err{
                 self.ErrMessage = err.localizedDescription
             }
-            print("-----sorunsuz geldi 2-----")
             self.persistRecentPhotoMessages(photoURL: photoURL, dateNow: dateNow)
+            self.shouldShowPhotoSendingProgresBar.toggle()
             self.messageSend.toggle() // scroll viewreader için proxy değişkeni bu değişken. scroll down yapmama yarıyor.
         }
         
-        print("-----sorunsuz geldi 3-----")
         //--
         
         let recivierDocument = FirebaseManager.shared.firestore
@@ -139,12 +136,14 @@ class ChatLogViewModel: ObservableObject {
             }
         }
         //--
-        print("-----sorunsuz geldi 4-----")
     }
     
     
     func handleSendText(){
-        let chattext = self.chatText
+        if self.chatText.isEmpty {
+            return
+        }
+        let chattext : String = self.chatText
         self.chatText = ""
         guard let fromID = FirebaseManager.shared.auth.currentUser?.uid else { return }
         guard let toID = ChatingPerson?.id else { return }

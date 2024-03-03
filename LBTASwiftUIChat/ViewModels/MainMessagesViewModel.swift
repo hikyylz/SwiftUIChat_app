@@ -19,6 +19,20 @@ class MainMessagesViewModel: ObservableObject {
         fetchRecentMessages()
     }
     
+    func deleteSelectedRecentMessage(messageOwner: String){
+        guard let userId = chatUser?.uid else {
+            print("olmadı deleyte ----------------")
+            return
+        }
+        let selectedRecentMessageDoc = FirebaseManager.shared.firestore
+            .collection("recent_messages")
+            .document(userId)
+            .collection("messages")
+            .document(messageOwner)
+        
+        selectedRecentMessageDoc.delete()
+    }
+    
     /// this func fecth last message of everyones last chat weit me.
     private func fetchRecentMessages(){
         guard let userId = FirebaseManager.shared.auth.currentUser?.uid else {

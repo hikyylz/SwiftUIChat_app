@@ -20,7 +20,6 @@ struct ChatView: View {
         self.ChatLogVM = ChatLogViewModel(ChatingPerson: ChatUser)
     }
     
-    
     var body: some View {
         NavigationStack{
             ZStack{
@@ -29,6 +28,12 @@ struct ChatView: View {
                 VStack{
                     Text("\(ChatLogVM.ErrMessage)") 
                     chatMessagesView
+                        .overlay(alignment: .bottom) {
+                            if ChatLogVM.shouldShowPhotoSendingProgresBar{
+                                photoSendingProgressView
+                            }
+                        }
+                    
                     ChatButtonBar
                 }
             }
@@ -48,6 +53,15 @@ struct ChatView: View {
         }
     }
     
+    private var photoSendingProgressView: some View{
+        ProgressView()
+            .frame(width: 60, height: 60)
+            .background(content: {
+                Circle()
+                    .foregroundStyle(.white.opacity(0.5))
+            })
+            .padding()
+    }
     
     private var PhotoShareView: some View{
         RoundedRectangle(cornerRadius: 15.0)

@@ -32,7 +32,6 @@ struct MessagesView: View {
                         
                         
                         VStack(alignment: .leading){
-                            
                             Text("\(recentMessage.email.replacingOccurrences(of: "@gmail.com", with: ""))")
                             Text("\(recentMessage.text)")
                                 .font(.system(size: 14))
@@ -49,17 +48,18 @@ struct MessagesView: View {
                 .foregroundStyle(Color.black)
                 .contextMenu(menuItems: {
                     Button(action: {
-                        
+                        // mmvm.delete selected recent mesaage
+                        MainMessageVM.deleteSelectedRecentMessage(messageOwner: recentMessage.toID)
                     }, label: {
-                        Text("Button 1")
+                        Text("Delete")
                     })
+                    
                     Button(action: {
                         
                     }, label: {
-                        Text("Button 2")
+                        Text("Archive")
                     })
                 })
-                
                 Divider()
             }
             
