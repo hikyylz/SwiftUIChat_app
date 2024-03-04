@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RecentMessage: Identifiable {
+struct RecentMessage: Identifiable{
     var id : String { documentId }
     let documentId: String
     let text, fromID, toID: String
@@ -16,7 +16,7 @@ struct RecentMessage: Identifiable {
     
     init(documentId: String, data: [String: Any]){
         self.documentId = documentId
-        self.text = data["text"] as? String ?? ""
+        self.text = data["text"] as? String ?? "- new Photo -"
         self.email = data["email"] as? String ?? ""
         self.fromID = data["fromID"] as? String ?? ""
         self.toID = data["toID"] as? String ?? ""

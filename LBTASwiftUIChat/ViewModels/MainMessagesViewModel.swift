@@ -10,7 +10,7 @@ import Foundation
 // view model ın amacı , view da kullanacağım elementlerin oluşturulması ve gösterime hazır hale getirilmesini saglamaktır. ObservableObject olması da içerinden bazı değişkenleri publish edebilmemi garantiliyor.
 class MainMessagesViewModel: ObservableObject {
     @Published var errMessage: String = ""
-    @Published var chatUser: ChatUserInfo?
+    @Published var chatUser: ChatUserInfo? // log in olmuş insanın bilgileri bu, chatingperson değil.
     @Published var isCurrentlyUserLogedIn: Bool = false
     @Published var recentMessages = [RecentMessage]()
     
@@ -19,18 +19,58 @@ class MainMessagesViewModel: ObservableObject {
         fetchRecentMessages()
     }
     
-    func deleteSelectedRecentMessage(messageOwner: String){
+    func deleteSelectedRecentMessage(recentMessage: RecentMessage){
+        let IdwillBeDeleted: String
         guard let userId = chatUser?.uid else {
-            print("olmadı deleyte ----------------")
             return
         }
-        let selectedRecentMessageDoc = FirebaseManager.shared.firestore
+        
+        if userId == recentMessage.fromID{
+            // son mesajı chatuser atmıs.
+            IdwillBeDeleted = recentMessage.toID
+        }else{
+            // son mesajı chatingperson atmıs.
+            IdwillBeDeleted = recentMessage.fromID
+        }
+        
+        let recentMessageDoc = FirebaseManager.shared.firestore
             .collection("recent_messages")
             .document(userId)
             .collection("messages")
-            .document(messageOwner)
+            .document(IdwillBeDeleted)
         
-        selectedRecentMessageDoc.delete()
+        recentMessageDoc.delete { err in
+            if let err = err{
+                print("delete işleminde sorun oldu---------")
+                return
+            }
+            print("delete işlemi başaıyla sonuçlandı --------------")
+            self.fetchCurrentRecentMessages()
+            return
+        }
+    }
+    
+    private func fetchCurrentRecentMessages(){
+        guard let userId = chatUser?.uid else {
+            return
+        }
+        FirebaseManager.shared.firestore
+            .collection("recent_messages")
+            .document(userId)
+            .collection("messages")
+            .getDocuments { querySnap, err in
+                guard let documents = querySnap?.documents else{
+                    print("current recent messages yüklenemedi ------------")
+                    return
+                }
+                self.recentMessages.removeAll()
+                documents.forEach { docSnap in
+                    let docId = docSnap.documentID
+                    let docData = docSnap.data()
+                    self.recentMessages.append(RecentMessage(documentId: docId, data: docData))
+                }
+                
+            }
     }
     
     /// this func fecth last message of everyones last chat weit me.

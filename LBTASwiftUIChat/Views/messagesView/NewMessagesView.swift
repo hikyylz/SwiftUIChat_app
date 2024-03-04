@@ -22,9 +22,6 @@ struct NewMessagesView: View {
             ZStack{
                 newMessagesBackgoundColor.ignoresSafeArea()
                 
-                NavigationLink("", isActive: $shouldShowChatView) {
-                    ChatView(ChatUser: CurrentChatPerson)
-                }
                 VStack{
                     CustomNavBar(MainMessageVM: MainMessageVM, shouldShoeLogoutOptions: $shouldShoeLogoutOptions, shoulShorProfileView: $shoulShorProfileView)
                     MessagesView(MainMessageVM: MainMessageVM)
@@ -35,6 +32,10 @@ struct NewMessagesView: View {
                 .toolbar(.hidden)
             }
             
+            // bu yazımı geç fark ettim, ios17 sonrası böyle geçiş yapılabiliyor ara view kullanarak iki view arasında.
+            .navigationDestination(isPresented: $shouldShowChatView) {
+                ChatView(ChatUser: CurrentChatPerson)
+            }
         }
         .fullScreenCover(isPresented: $MainMessageVM.isCurrentlyUserLogedIn, content: {
             loginView()
