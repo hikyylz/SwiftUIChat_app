@@ -16,7 +16,7 @@ struct CustomNavBar: View {
     var body: some View {
         HStack(spacing: 16) {
             
-            WebImage(url: URL(string: MainMessageVM.chatUser?.profileUrl ?? "" ))
+            WebImage(url: URL(string: MainMessageVM.getProfileUrl()))
                 .resizable()
                 .scaledToFill()
                 .frame(width: 64, height: 64)

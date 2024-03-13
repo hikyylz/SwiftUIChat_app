@@ -1,14 +1,14 @@
 //
-//  LBTASwiftUIChatApp.swift
-//  LBTASwiftUIChat
+//  ChatAppCloneApp.swift
+//  ChatAppClone
 //
-//  Created by Kaan Yıldız on 6.02.2024.
+//  Created by Kaan Yıldız on 13.03.2024.
 //
 
 import SwiftUI
 
 @main
-struct LBTASwiftUIChatApp: App {
+struct ChatAppCloneApp: App {
     var body: some Scene {
         WindowGroup {
             if FirebaseManager.shared.auth.currentUser != nil{

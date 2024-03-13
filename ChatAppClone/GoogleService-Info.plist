@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyC4wGBbjM7oLL0qFMpefd8swzWp-D8ph8w</string>
+	<string>AIzaSyApjQGLyazuOMEU2FIWJ9AJtZXPd7aBeoQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>236222518272</string>
+	<string>965955316141</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.kaanyildiz.LBTASwiftUIChat</string>
+	<string>com.kaanyildiz.ChatAppClone</string>
 	<key>PROJECT_ID</key>
-	<string>lbtaswiftuichatapp</string>
+	<string>chat-app-clone-389e2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>lbtaswiftuichatapp.appspot.com</string>
+	<string>chat-app-clone-389e2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:236222518272:ios:52189b395a621cf895f4e5</string>
+	<string>1:965955316141:ios:c9e65c154edfcd4b2e5924</string>
 </dict>
 </plist>

@@ -61,9 +61,12 @@ struct RecentMessageBloks: View {
             .foregroundStyle(Color.black)
             .contextMenu(menuItems: {
                 Button(action: {
-                    MainMessageVM.deleteSelectedRecentMessage(recentMessage: recentMessage)
+                    withAnimation(.smooth) {
+                        MainMessageVM.deleteSelectedRecentMessage(recentMessage: recentMessage)
+                    }
+                    
                 }, label: {
-                    Text("Delete")
+                    Text("Delete Shadow")
                 })
                 
                 Button(action: {

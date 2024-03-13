@@ -19,6 +19,15 @@ class MainMessagesViewModel: ObservableObject {
         fetchRecentMessages()
     }
     
+    func getProfileUrl() ->  String {
+        guard let profileUrl = chatUser?.profileUrl else{
+            let placeholderPersonImage = "https://firebasestorage.googleapis.com/v0/b/chat-app-clone-389e2.appspot.com/o/person-placeholder-2.jpg?alt=media&token=a7d73bc0-8830-42ee-aecd-fec68a0a45de"
+            return placeholderPersonImage
+        }
+        return profileUrl
+    }
+    
+    
     func deleteSelectedRecentMessage(recentMessage: RecentMessage){
         let IdwillBeDeleted: String
         guard let userId = chatUser?.uid else {
@@ -40,7 +49,7 @@ class MainMessagesViewModel: ObservableObject {
             .document(IdwillBeDeleted)
         
         recentMessageDoc.delete { err in
-            if let err = err{
+            if let _ = err{
                 print("delete işleminde sorun oldu---------")
                 return
             }
