@@ -24,6 +24,7 @@ struct NewMessagesView: View {
                 
                 VStack{
                     CustomNavBar(MainMessageVM: MainMessageVM, shouldShoeLogoutOptions: $shouldShoeLogoutOptions, shoulShorProfileView: $shoulShorProfileView)
+                    
                     MessagesView(MainMessageVM: MainMessageVM)
                         .overlay(alignment: .bottom) {
                             newMessageButtonView(shouldShowNewMessageScreen: $shouldShowNewMessageScreen)

@@ -13,6 +13,7 @@ class MainMessagesViewModel: ObservableObject {
     @Published var chatUser: ChatUserInfo? // log in olmuş insanın bilgileri bu, chatingperson değil.
     @Published var isCurrentlyUserLogedIn: Bool = false
     @Published var recentMessages = [RecentMessage]()
+    @Published var archivedMessages = [RecentMessage]()
     
     init() {
         fetchCurrentUser()

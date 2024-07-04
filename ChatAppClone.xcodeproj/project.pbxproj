@@ -58,7 +58,6 @@
 		EC4C9D672BA1E4700029CB64 /* NewMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4C9D532BA1E4700029CB64 /* NewMessagesView.swift */; };
 		EC4C9D682BA1E4700029CB64 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4C9D552BA1E4700029CB64 /* LoginView.swift */; };
 		EC4C9D692BA1E4700029CB64 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4C9D562BA1E4700029CB64 /* ProfileView.swift */; };
-		EC4C9D6A2BA1E4700029CB64 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC4C9D582BA1E4700029CB64 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,7 +104,6 @@
 		EC4C9D532BA1E4700029CB64 /* NewMessagesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessagesView.swift; sourceTree = "<group>"; };
 		EC4C9D552BA1E4700029CB64 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		EC4C9D562BA1E4700029CB64 /* ProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		EC4C9D582BA1E4700029CB64 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,7 +183,6 @@
 			isa = PBXGroup;
 			children = (
 				EC4C9D462BA1E4700029CB64 /* Models */,
-				EC4C9D592BA1E4700029CB64 /* Preview Content */,
 				EC4C9D4D2BA1E4700029CB64 /* utilities */,
 				EC4C9D4A2BA1E4700029CB64 /* ViewModels */,
 				EC4C9D572BA1E4700029CB64 /* Views */,
@@ -272,15 +269,6 @@
 				EC4C9D562BA1E4700029CB64 /* ProfileView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		EC4C9D592BA1E4700029CB64 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				EC4C9D582BA1E4700029CB64 /* Preview Assets.xcassets */,
-			);
-			name = "Preview Content";
-			path = "../../LBTASwiftUIChat/LBTASwiftUIChat/Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -423,7 +411,6 @@
 			files = (
 				EC4C9D212BA1E3E80029CB64 /* Preview Assets.xcassets in Resources */,
 				EC425F232BA1EFCD007351C0 /* GoogleService-Info.plist in Resources */,
-				EC4C9D6A2BA1E4700029CB64 /* Preview Assets.xcassets in Resources */,
 				EC4C9D1E2BA1E3E80029CB64 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
